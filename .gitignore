@@ -1,0 +1,21 @@
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+*.pyc
+.env
+.DS_Store
+
+# Data & artifacts (se versionan solo .gitkeep)
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+artifacts/*
+!artifacts/models/.gitkeep
+!artifacts/metrics/.gitkeep
+
+reports/outputs/*
+!reports/outputs/.gitkeep
