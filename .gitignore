@@ -1,21 +1,37 @@
-__pycache__/
-.ipynb_checkpoints/
-.venv/
-*.pyc
-.env
-.DS_Store
+# =========================
+# Databases
+# =========================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.sqlite-journal
+*.db-wal
+*.sqlite-wal
+*.db-shm
+*.sqlite-shm
 
-# Data & artifacts (se versionan solo .gitkeep)
-data/raw/*
-data/interim/*
-data/processed/*
-!data/raw/.gitkeep
-!data/interim/.gitkeep
-!data/processed/.gitkeep
+# =========================
+# Excel files
+# =========================
+*.xls
+*.xlsx
+*.xlsm
 
-artifacts/*
-!artifacts/models/.gitkeep
-!artifacts/metrics/.gitkeep
+# =========================
+# CSV files
+# =========================
+*.csv
 
-reports/outputs/*
-!reports/outputs/.gitkeep
+# =========================
+# Parquet / Feather (por si acaso)
+# =========================
+*.parquet
+*.feather
+
+# =========================
+# Backup files
+# =========================
+*.bak
+*.tmp
+*.swp
