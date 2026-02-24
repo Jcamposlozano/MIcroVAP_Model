@@ -68,46 +68,50 @@ class Db_datos:
         table: str,
         *,
         clear_table: bool = False,
-        if_exists: str = "append",   # 'append' o 'replace'
+        if_exists: str = "append",
         chunksize: int = 5000,
         method: str = "multi",
         validate_columns: bool = True,
     ) -> int:
-        """
-        Carga un DataFrame en una tabla SQLite con retroalimentación.
-        - clear_table=True: hace DELETE antes del insert (mantiene esquema).
-        - if_exists='replace': borra y recrea tabla (NO recomendado si tienes FKs).
-        Retorna: número de filas insertadas.
-        """
         if df is None:
             raise ValueError("df is None")
         if df.empty:
             return 0
-
         if if_exists not in ("append", "replace"):
             raise ValueError("if_exists debe ser 'append' o 'replace'")
+
+        df = df.copy()
+        df.columns = df.columns.str.strip()
 
         with sqlite3.connect(self.DB_PATH) as con:
             con.execute("PRAGMA foreign_keys = ON;")
 
-            # Validación opcional: columnas del DF vs tabla
             if validate_columns and if_exists == "append":
                 cur = con.execute(f"PRAGMA table_info({table});")
-                table_cols = [r[1] for r in cur.fetchall()]  # name está en pos 1
-                missing = [c for c in table_cols if c not in df.columns]
-                extra = [c for c in df.columns if c not in table_cols]
+                rows = cur.fetchall()
+                # (cid, name, type, notnull, dflt_value, pk)
+                table_cols = [r[1] for r in rows]
 
+                # Detectar PK autogenerada (rowid alias): pk==1 y type == 'INTEGER'
+                # Nota: en SQLite SOLO "INTEGER PRIMARY KEY" se comporta como rowid/autogen.
+                pk_autogen_cols = [
+                    r[1] for r in rows
+                    if r[5] == 1 and (r[2] or "").strip().upper() == "INTEGER"
+                ]
+
+                # Columnas esperadas para INSERT: todas menos pk autogenerada
+                insertable_cols = [c for c in table_cols if c not in pk_autogen_cols]
+
+                # Recorta DF a columnas insertables (si trae drug_id, lo botamos)
+                df = df[[c for c in df.columns if c in insertable_cols]]
+
+                missing = [c for c in insertable_cols if c not in df.columns]
                 if missing:
                     raise ValueError(
                         f"Faltan columnas en df para insertar en '{table}': {missing}"
                     )
-                # extra no necesariamente es error; pero suele ser ruido
-                if extra:
-                    # te dejo elegir: o lo cortas o lo vuelas como error
-                    df = df[[c for c in df.columns if c in table_cols]]
 
             if clear_table:
-                # Limpia pero conserva la tabla y constraints
                 con.execute(f"DELETE FROM {table};")
 
             before = con.total_changes
