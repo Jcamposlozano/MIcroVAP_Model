@@ -1,14 +1,21 @@
-DROP TABLE IF EXISTS specimen_otu;
-DROP TABLE IF EXISTS antibiotic_course;
-DROP TABLE IF EXISTS vitals;
-DROP TABLE IF EXISTS lab_results;
-DROP TABLE IF EXISTS abg_results;
-DROP TABLE IF EXISTS vent_settings;
-DROP TABLE IF EXISTS admission_outcomes;
+DROP INDEX IF EXISTS idx_abg_admission;
+DROP INDEX IF EXISTS idx_lab_admission;
+DROP INDEX IF EXISTS idx_vitals_admission;
+DROP INDEX IF EXISTS idx_vent_admission;
+DROP INDEX IF EXISTS idx_abx_admission;
+DROP INDEX IF EXISTS idx_abx_drug;
 DROP TABLE IF EXISTS admission_derived;
-DROP TABLE IF EXISTS specimen;
-DROP TABLE IF EXISTS dim_otu;
+DROP TABLE IF EXISTS admission_outcomes;
+DROP TABLE IF EXISTS vent_settings;
+DROP TABLE IF EXISTS abg_results;
+DROP TABLE IF EXISTS lab_results;
+DROP TABLE IF EXISTS vitals;
+DROP TABLE IF EXISTS antibiotic_course;
 DROP TABLE IF EXISTS dim_antibiotic;
+DROP TABLE IF EXISTS specimen_otu;
+DROP TABLE IF EXISTS dim_otu;
+DROP TABLE IF EXISTS micro_result;
+DROP TABLE IF EXISTS specimen;
 DROP TABLE IF EXISTS admission;
 DROP TABLE IF EXISTS patient;
 
@@ -79,7 +86,9 @@ CREATE TABLE micro_result (
 
 CREATE TABLE dim_otu (
   otu_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  otu_code TEXT NOT NULL UNIQUE
+  otu_code TEXT NOT NULL UNIQUE,
+  description TEXT NOT NULL,
+  comment TEXT NOT NULL
 );
 
 CREATE TABLE specimen_otu (
@@ -160,10 +169,8 @@ CREATE INDEX idx_lab_admission ON lab_results(admission_id);
 
 CREATE TABLE abg_results (
   abg_id INTEGER PRIMARY KEY AUTOINCREMENT,
-
   admission_id INTEGER NOT NULL,
   measured_at TEXT,
-
   ph REAL,
   pao2 REAL,
   paco2 REAL,
