@@ -67,12 +67,15 @@ CREATE TABLE admission (
 CREATE TABLE specimen (
   specimen_id INT NOT NULL,
   admission_id INT NOT NULL,
-  specimen text,
+  --specimen text,
   timepoint int,
   tissue_type varchar(50),
   PRIMARY KEY (specimen_id),
   FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
 );
+
+-- ALTER TABLE specimen DROP COLUMN specimen;
+
 
 CREATE TABLE micro_result (
   micro_result_id INTEGER PRIMARY KEY AUTOINCREMENT,

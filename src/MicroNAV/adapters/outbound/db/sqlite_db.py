@@ -61,7 +61,29 @@ class Db_datos:
         except Exception as e:
             print(f"Error extracting data: {e}")
             return pd.DataFrame()
+        
+    def load_specimen_otu(self, df_specimen_otu: pd.DataFrame, clear_table: bool = False) -> int:
+        df_ = df_specimen_otu[["specimen_id", "otu_id", "relative_abundance"]].copy()
+        df_["specimen_id"] = df_["specimen_id"].astype(str).str.strip()
+        df_["otu_id"] = pd.to_numeric(df_["otu_id"], errors="coerce")
+        df_["relative_abundance"] = pd.to_numeric(df_["relative_abundance"], errors="coerce")
 
+        df_ = df_.dropna(subset=["specimen_id", "otu_id", "relative_abundance"])
+        df_ = df_[(df_["specimen_id"] != "") & (df_["relative_abundance"] > 0)]
+
+        rows = list(df_.itertuples(index=False, name=None))
+
+        with sqlite3.connect(self.DB_PATH) as con:
+            con.execute("PRAGMA foreign_keys = ON;")
+            if clear_table:
+                con.execute("DELETE FROM specimen_otu;")
+            before = con.total_changes
+            con.executemany(
+                "INSERT INTO specimen_otu (specimen_id, otu_id, relative_abundance) VALUES (?, ?, ?)",
+                rows
+            )
+            return con.total_changes - before
+    
     def load_df(
         self,
         df: pd.DataFrame,
