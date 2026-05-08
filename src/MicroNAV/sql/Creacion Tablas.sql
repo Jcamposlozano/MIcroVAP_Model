@@ -1,14 +1,21 @@
-DROP TABLE IF EXISTS specimen_otu;
-DROP TABLE IF EXISTS antibiotic_course;
-DROP TABLE IF EXISTS vitals;
-DROP TABLE IF EXISTS lab_results;
-DROP TABLE IF EXISTS abg_results;
-DROP TABLE IF EXISTS vent_settings;
-DROP TABLE IF EXISTS admission_outcomes;
+DROP INDEX IF EXISTS idx_abg_admission;
+DROP INDEX IF EXISTS idx_lab_admission;
+DROP INDEX IF EXISTS idx_vitals_admission;
+DROP INDEX IF EXISTS idx_vent_admission;
+DROP INDEX IF EXISTS idx_abx_admission;
+DROP INDEX IF EXISTS idx_abx_drug;
 DROP TABLE IF EXISTS admission_derived;
-DROP TABLE IF EXISTS specimen;
-DROP TABLE IF EXISTS dim_otu;
+DROP TABLE IF EXISTS admission_outcomes;
+DROP TABLE IF EXISTS vent_settings;
+DROP TABLE IF EXISTS abg_results;
+DROP TABLE IF EXISTS lab_results;
+DROP TABLE IF EXISTS vitals;
+DROP TABLE IF EXISTS antibiotic_course;
 DROP TABLE IF EXISTS dim_antibiotic;
+DROP TABLE IF EXISTS specimen_otu;
+DROP TABLE IF EXISTS dim_otu;
+DROP TABLE IF EXISTS micro_result;
+DROP TABLE IF EXISTS specimen;
 DROP TABLE IF EXISTS admission;
 DROP TABLE IF EXISTS patient;
 
@@ -40,7 +47,7 @@ CREATE TABLE patient (
 );
 
 CREATE TABLE admission (
-  admission_id INT NOT NULL,
+  admission_id TEXT NOT NULL,
   patient_id INT NOT NULL,
   admission_infectious binary,
   admission_general_surgery binary,
@@ -60,16 +67,19 @@ CREATE TABLE admission (
 CREATE TABLE specimen (
   specimen_id INT NOT NULL,
   admission_id INT NOT NULL,
-  specimen text,
+  --specimen text,
   timepoint int,
   tissue_type varchar(50),
   PRIMARY KEY (specimen_id),
   FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
 );
 
+-- ALTER TABLE specimen DROP COLUMN specimen;
+
+
 CREATE TABLE micro_result (
   micro_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  specimen_id INTEGER NOT NULL,
+  specimen_id TEXT NOT NULL,
   marker_code TEXT NOT NULL,
   copies_ul_dna REAL,
   FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
@@ -79,13 +89,15 @@ CREATE TABLE micro_result (
 
 CREATE TABLE dim_otu (
   otu_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  otu_code TEXT NOT NULL UNIQUE
+  otu_code TEXT NOT NULL UNIQUE,
+  description TEXT NOT NULL,
+  comment TEXT NOT NULL
 );
 
 CREATE TABLE specimen_otu (
-  specimen_id INTEGER NOT NULL,
+  specimen_id TEXT NOT NULL,
   otu_id INTEGER NOT NULL,
-  relative_abundance REAL NOT NULL,  -- ej: 0.117370892
+  relative_abundance REAL NOT NULL,
   PRIMARY KEY (specimen_id, otu_id),
   FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
   FOREIGN KEY (otu_id) REFERENCES dim_otu(otu_id)
@@ -98,7 +110,7 @@ CREATE TABLE dim_antibiotic (
 
 CREATE TABLE antibiotic_course (
   abx_course_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  admission_id INTEGER NOT NULL,
+  admission_id TEXT NOT NULL,
   drug_id INTEGER NOT NULL,
   start_antibiotic TEXT,   -- si viene como fecha: luego la estandarizas a ISO 'YYYY-MM-DD' o datetime
   end_antibiotic TEXT,
@@ -112,7 +124,7 @@ CREATE INDEX idx_abx_drug ON antibiotic_course(drug_id);
 
 CREATE TABLE vitals (
   vitals_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  admission_id INTEGER NOT NULL,
+  admission_id TEXT NOT NULL,
   measured_at TEXT,   -- idealmente 'YYYY-MM-DD HH:MM:SS'
   heart_rate REAL,
   respiratory_rate REAL,
@@ -131,7 +143,7 @@ CREATE INDEX idx_vitals_admission ON vitals(admission_id);
 
 CREATE TABLE lab_results (
   lab_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  admission_id INTEGER NOT NULL,
+  admission_id TEXT NOT NULL,
   measured_at TEXT,
   white_blood_cells REAL,
   neutrophils REAL,
@@ -157,13 +169,11 @@ CREATE TABLE lab_results (
 
 CREATE INDEX idx_lab_admission ON lab_results(admission_id);
 
-
+-- Arterial Blood Gas (Gasometria Arterial)
 CREATE TABLE abg_results (
   abg_id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-  admission_id INTEGER NOT NULL,
+  admission_id TEXT NOT NULL,
   measured_at TEXT,
-
   ph REAL,
   pao2 REAL,
   paco2 REAL,
@@ -171,7 +181,6 @@ CREATE TABLE abg_results (
   hco3 REAL,
   lactate REAL,
   pafi REAL,
-  -- opcional si tu dataset ya la trae como variable
   hiperoxemia TEXT,
   FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
 );
@@ -180,7 +189,7 @@ CREATE INDEX idx_abg_admission ON abg_results(admission_id);
 
 CREATE TABLE vent_settings (
   vent_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  admission_id INTEGER NOT NULL,
+  admission_id TEXT NOT NULL,
   measured_at TEXT,
   ventilatory_mode TEXT,
   tidal_volume REAL,
@@ -197,7 +206,7 @@ CREATE INDEX idx_vent_admission ON vent_settings(admission_id);
 
 -- 1:1 con admission (PK = FK)
 CREATE TABLE admission_outcomes (
-  admission_id INTEGER PRIMARY KEY,
+  admission_id TEXT PRIMARY KEY,
   pneumonia INTEGER,
   tracheostomy INTEGER,
   date_tracheostomy TEXT,
@@ -210,7 +219,7 @@ CREATE TABLE admission_outcomes (
 
 -- Opcional 1:1 para derivadas
 CREATE TABLE admission_derived (
-  admission_id INTEGER PRIMARY KEY,
+  admission_id TEXT PRIMARY KEY,
   days_stay_icu REAL,
   intubation_days REAL,
   length_of_stay REAL,
