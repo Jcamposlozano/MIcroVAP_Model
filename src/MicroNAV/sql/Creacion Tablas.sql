@@ -79,7 +79,7 @@ CREATE TABLE specimen (
 
 CREATE TABLE micro_result (
   micro_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  specimen_id INTEGER NOT NULL,
+  specimen_id TEXT NOT NULL,
   marker_code TEXT NOT NULL,
   copies_ul_dna REAL,
   FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
