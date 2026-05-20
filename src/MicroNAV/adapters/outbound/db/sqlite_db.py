@@ -107,6 +107,11 @@ class Db_datos:
 
         with sqlite3.connect(self.DB_PATH) as con:
             con.execute("PRAGMA foreign_keys = ON;")
+            
+            if clear_table:
+                sql_delete = f"DELETE FROM {table};"
+                #print(sql_delete)
+                con.execute(sql_delete)
 
             if validate_columns and if_exists == "append":
                 cur = con.execute(f"PRAGMA table_info({table});")
@@ -132,9 +137,6 @@ class Db_datos:
                     raise ValueError(
                         f"Faltan columnas en df para insertar en '{table}': {missing}"
                     )
-
-            if clear_table:
-                con.execute(f"DELETE FROM {table};")
 
             before = con.total_changes
 

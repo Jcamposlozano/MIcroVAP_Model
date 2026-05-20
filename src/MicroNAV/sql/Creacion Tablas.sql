@@ -64,6 +64,24 @@ CREATE TABLE admission (
   FOREIGN KEY (patient_id) REFERENCES patient(patient_id)
 );
 
+CREATE TABLE trauma(
+	trauma_id INT NOT NULL,
+	injury_severity_score_iss INT, 	
+	trauma binary,
+	multiple_trauma binary, 	
+	craniofacial_trauma binary,
+	traumatic_brain_injury binary,
+	other binary,
+	skull binary,
+	thorax binary,
+	abdomen binary,
+	upper_limbs binary,
+	lower_limbs binary,
+	admission_id INT NOT NULL,
+	PRIMARY KEY (trauma_id),
+	FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
+);
+
 CREATE TABLE specimen (
   specimen_id INT NOT NULL,
   admission_id INT NOT NULL,
@@ -75,6 +93,21 @@ CREATE TABLE specimen (
 );
 
 -- ALTER TABLE specimen DROP COLUMN specimen;
+
+CREATE TABLE dim_metabolic(
+	  metabolito_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  metabolito text not null
+);
+
+
+CREATE TABLE metabolomic(
+	specimen_id INT,
+	metabolito_id INT,
+	PRIMARY KEY (specimen_id, metabolito_id),
+  	FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
+  	FOREIGN KEY (metabolito_id) REFERENCES dim_metabolic(metabolito_id)
+);
+
 
 
 CREATE TABLE micro_result (

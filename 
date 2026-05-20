@@ -1,0 +1,83 @@
+[33mcommit 709ef6f82482e966fde9efa62afc0d7598325cb1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Ingrid Gisell Bustos Moya <ingridbumo@unisabana.edu.co>
+Date:   Fri May 8 15:51:56 2026 -0500
+
+    modificaciones 08052026
+
+[33mcommit fe957361e58b4b5a874186b34563ca62df1ef62e[m[33m ([m[1;31morigin/main[m[33m)[m
+Merge: 8198a9f c40f726
+Author: Gibumo <ingridbumo@unisabana.edu.co>
+Date:   Fri May 8 14:17:53 2026 -0500
+
+    Merge pull request #4 from Jcamposlozano/feature/Jona
+    
+    Ajuste en .toml
+
+[33mcommit c40f726d7b66521766b89c8e6c5d40880d07102c[m
+Author: Jonathan Campos Lozano <jc222209@gmail.com>
+Date:   Thu May 7 21:09:43 2026 -0500
+
+    Ajuste en .toml
+
+[33mcommit 8198a9f4dc0f09c15dd78c5547576fd0c8759a7a[m
+Merge: 5e28a2a ed3d590
+Author: Jonathan Campos Lozano <58535230+Jcamposlozano@users.noreply.github.com>
+Date:   Thu May 7 20:46:56 2026 -0500
+
+    Merge pull request #3 from Jcamposlozano/develop
+    
+    Develop
+
+[33mcommit ed3d590b7cd291d39330fa04c720c87a774137df[m
+Merge: cc42d1e ca4e5ea
+Author: Jonathan Campos Lozano <58535230+Jcamposlozano@users.noreply.github.com>
+Date:   Thu May 7 20:46:26 2026 -0500
+
+    Merge pull request #2 from Jcamposlozano/feature/Jona
+    
+    Feature/jona
+
+[33mcommit ca4e5ea0e863e41df3f17bf162d402de4403e3db[m
+Author: Jonathan Campos Lozano <jc222209@gmail.com>
+Date:   Thu May 7 20:45:27 2026 -0500
+
+    Codigo completo para carga de tablas
+
+[33mcommit 342a51cdf6be0ace9da3ca5898455c7f731598ea[m
+Author: Jonathan Campos Lozano <jc222209@gmail.com>
+Date:   Wed Apr 29 07:17:32 2026 -0500
+
+    Ajustes sin revisar
+
+[33mcommit f2a1df7004aa17f95a85bf16ce664b0921f176ba[m
+Author: Jonathan Campos Lozano <jc2222@gmail.com>
+Date:   Wed Mar 4 16:07:07 2026 -0500
+
+    Update data with OTUs
+
+[33mcommit cc42d1ea9aa7fc37f22e17c07a346be735a79fdf[m
+Merge: 5e28a2a 565cd1d
+Author: Jonathan Campos Lozano <58535230+Jcamposlozano@users.noreply.github.com>
+Date:   Mon Feb 23 21:28:34 2026 -0500
+
+    Merge pull request #1 from Jcamposlozano/feature/Jona
+    
+    Update in Upload data in db
+
+[33mcommit 565cd1dfaf80cb2f020aa1de220c95437c712f90[m
+Author: Jonathan Campos Lozano <jc2222@gmail.com>
+Date:   Mon Feb 23 21:26:38 2026 -0500
+
+    Update in Upload data in db
+
+[33mcommit 5e28a2a6671ee3d3075e92193b1e17603f315316[m
+Author: Jonathan Campos Lozano <jc2222@gmail.com>
+Date:   Mon Feb 23 18:05:38 2026 -0500
+
+    Push with changes in gitignore
+
+[33mcommit 917da3f0a3687a6c881413fc5f70b4aba09b18b7[m
+Author: Jonathan Campos Lozano <jc2222@gmail.com>
+Date:   Mon Feb 23 17:53:45 2026 -0500
+
+    first commit
