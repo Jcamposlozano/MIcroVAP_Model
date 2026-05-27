@@ -31,24 +31,40 @@ class Db_datos:
 
     def test(self):
         return "ok desde aqui"
-    
+
     def run_query(self, query='', params=None):
-        """Ejecuta una consulta en la base de datos SQLite."""
+        """Ejecuta consultas SQL en SQLite."""
+        
         try:
             con = sqlite3.connect(self.DB_PATH)
             cur = con.cursor()
-            if query.strip().upper().startswith(('SELECT', 'WITH')):
+
+            query_clean = query.strip().upper()
+
+            # SELECT normales
+            if query_clean.startswith(('SELECT', 'WITH')):
                 cur.execute(query, params or [])
                 data = cur.fetchall()
+
+            # Scripts SQL completos
+            elif ";" in query.strip():
+                cur.executescript(query)
+                con.commit()
+                data = None
+
+            # INSERT / UPDATE / DELETE / CREATE individuales
             else:
                 cur.execute(query, params or [])
                 con.commit()
                 data = None
+
             cur.close()
             con.close()
+
             return data
+
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error ejecutando SQL: {e}")
             return None
 
     def extracData(self, sql):
@@ -107,6 +123,11 @@ class Db_datos:
 
         with sqlite3.connect(self.DB_PATH) as con:
             con.execute("PRAGMA foreign_keys = ON;")
+            
+            if clear_table:
+                sql_delete = f"DELETE FROM {table};"
+                #print(sql_delete)
+                con.execute(sql_delete)
 
             if validate_columns and if_exists == "append":
                 cur = con.execute(f"PRAGMA table_info({table});")
@@ -132,9 +153,6 @@ class Db_datos:
                     raise ValueError(
                         f"Faltan columnas en df para insertar en '{table}': {missing}"
                     )
-
-            if clear_table:
-                con.execute(f"DELETE FROM {table};")
 
             before = con.total_changes
 
