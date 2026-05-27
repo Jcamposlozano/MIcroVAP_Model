@@ -29,16 +29,12 @@ def main():
         loader.update_micro_result,
         loader.update_trauma,
     ]
-
     if RUN_OTUS:
         steps.append(loader.updateSepecimentOTU)
-
     if RUN_METABOLOMICS:
         steps.append(loader.updateSpecimenMetabolomic)
-
     for step in steps:
         step(df)
-
     log.info("Pipeline finalizado.")
 
 

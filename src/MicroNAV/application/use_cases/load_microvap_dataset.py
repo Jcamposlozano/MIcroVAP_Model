@@ -33,7 +33,7 @@ class Load_data:
 
         self.db_data.run_query(sql_script)
 
-        print("Base de datos limpiada y tablas creadas correctamente.")
+        print("Base de datos limpiada y tablas creadas correctamente")
 
     def build_measured_at(self, row):
         if pd.isna(row["admission_date_icu"]):
