@@ -58,8 +58,3 @@ git push -u origin main
 git remote add origin https://github.com/Jcamposlozano/MIcroVAP_Model.git
 git branch -M main
 git push -u origin main
-
-
-### Run PipeLine
-
-poetry run python -m MicroNAV.pipeline
