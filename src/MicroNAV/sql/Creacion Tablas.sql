@@ -4,6 +4,9 @@ DROP INDEX IF EXISTS idx_vitals_admission;
 DROP INDEX IF EXISTS idx_vent_admission;
 DROP INDEX IF EXISTS idx_abx_admission;
 DROP INDEX IF EXISTS idx_abx_drug;
+DROP TABLE IF EXISTS trauma;
+DROP TABLE IF EXISTS dim_metabolic;
+DROP TABLE IF EXISTS metabolomic;
 DROP TABLE IF EXISTS admission_derived;
 DROP TABLE IF EXISTS admission_outcomes;
 DROP TABLE IF EXISTS vent_settings;
@@ -65,7 +68,7 @@ CREATE TABLE admission (
 );
 
 CREATE TABLE trauma(
-	trauma_id INT NOT NULL,
+	trauma_id INTEGER PRIMARY KEY AUTOINCREMENT,
 	injury_severity_score_iss INT, 	
 	trauma binary,
 	multiple_trauma binary, 	
@@ -78,7 +81,6 @@ CREATE TABLE trauma(
 	upper_limbs binary,
 	lower_limbs binary,
 	admission_id INT NOT NULL,
-	PRIMARY KEY (trauma_id),
 	FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
 );
 
@@ -99,16 +101,14 @@ CREATE TABLE dim_metabolic(
 	  metabolito text not null
 );
 
-
 CREATE TABLE metabolomic(
-	specimen_id INT,
-	metabolito_id INT,
-	PRIMARY KEY (specimen_id, metabolito_id),
-  	FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
-  	FOREIGN KEY (metabolito_id) REFERENCES dim_metabolic(metabolito_id)
+    specimen_id TEXT,
+    metabolito_id INT,
+    valor REAL,
+    PRIMARY KEY (specimen_id, metabolito_id),
+    FOREIGN KEY (specimen_id) REFERENCES specimen(specimen_id),
+    FOREIGN KEY (metabolito_id) REFERENCES dim_metabolic(metabolito_id)
 );
-
-
 
 CREATE TABLE micro_result (
   micro_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -167,7 +167,6 @@ CREATE TABLE vitals (
   mbp REAL,
   oxygen_saturation REAL,
   glasgow_score REAL,
-
   FOREIGN KEY (admission_id) REFERENCES admission(admission_id)
 );
 
@@ -255,7 +254,7 @@ CREATE TABLE admission_derived (
   admission_id TEXT PRIMARY KEY,
   days_stay_icu REAL,
   intubation_days REAL,
-  length_of_stay REAL,
+  length_stay REAL,
   days_antibiotic REAL,
   bmi REAL,
   pafi REAL,
